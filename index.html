@@ -45,15 +45,24 @@
         button {
             width: 100%;
             padding: 10px;
-            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 15px;
         }
-        button:hover {
+        .submit {
+            background-color: #4CAF50;
+        }
+        .submit:hover {
             background-color: #45a049;
+        }
+        .reset {
+            background-color: rgb(255, 60, 60);
+        }
+        .reset:hover {
+            background-color: #db1414;
         }
         #response {
             margin-top: 20px;
@@ -64,6 +73,32 @@
             border-radius: 4px;
             border: 1px solid #eee;
             color: #333;
+        }
+        .lot {    
+            display: inline-block;
+            background-color: #6b9cff;
+            text-align: center;
+            width: 130px;
+            height: 100px;
+            padding: 10px;
+            margin: 10px;
+        }
+        .name {
+            background-color: white;
+            border-radius: 10px;
+            padding: 5px;
+            margin-top: 7px;
+            font-size: small;
+        }
+        .number {
+            font-size: xx-large;
+            margin: 10px 10px;
+            background-color: white;
+            font-weight: bold;
+            padding: 3px;
+        }
+        .loten {
+            width: 400px;
         }
     </style>
 </head>
@@ -84,15 +119,19 @@
             <label for="amount">Hoeveelheid:</label>
             <input type="number" id="amount" name="amount" required>
         </div>
-        <button type="submit">Koop loten</button>
+        <button class="submit" type="submit">Koop loten</button>
+        <button class="reset" type="reset">Wissen</button>
     </form>
     
-    <div id="response">Wachten op loten...</div>
+    
+    <div id="response"></div>
+    <div id="loten" class="loten"></div>
 </div>
 
 <script>
     const form = document.getElementById('addRowForm');
     const responseDiv = document.getElementById('response');
+    const lotenDiv = document.getElementById('loten')
     
     // IMPORTANT: Replace this URL with your deployed Apps Script web app URL
     const API_URL = 'https://script.google.com/macros/s/AKfycbwMnZ97NDRsO5u7APOxKyT90pgVpiYDgwbLzRlZJLBPpfcgK-ornrgVP4vLEIWH0F_2DA/exec';
@@ -122,7 +161,18 @@
             const data = await res.json();
             
             if (res.ok) {
-                responseDiv.textContent = JSON.stringify(data.row_numbers, null, 2);
+                responseDiv.textContent = "Uw loten:"
+                console.log(data.row_numbers)
+                data.row_numbers.forEach(n => {
+                    const div = document.createElement('div');
+                    let shortName = name;
+                    if (shortName.length > 20) {
+                        return shortName.slice(0, 17) + '...';
+                    }
+                    div.innerHTML='<p class="name">'+ shortName +'</p><p class="number">' + String(n).padStart(4, '0') + '</p>'
+                    div.classList.add('lot')
+                    lotenDiv.append(div)
+                });
             } else {
                 responseDiv.textContent = `Error: ${data.message || 'Unknown error'}`;
             }
@@ -131,6 +181,12 @@
             responseDiv.textContent = `Fetch error: ${error.message}`;
         }
     });
+
+    form.addEventListener('reset', e => {
+        form.reset()
+        lotenDiv.innerHTML = ''
+        responseDiv.textContent = ''
+    })
 </script>
 
 </body>
