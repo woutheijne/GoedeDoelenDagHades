@@ -95,7 +95,7 @@
     const responseDiv = document.getElementById('response');
     
     // IMPORTANT: Replace this URL with your deployed Apps Script web app URL
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyLjhaw6WtNrXt9UlU9zXojHC9_o-FdBXtKtL8qM1LWepE9qfI8n72kO8LXA3qeU0mQCQ/exec';
+    const API_URL = 'YOUR_WEB_APP_URL';
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault(); // Prevent the form from submitting normally
@@ -106,19 +106,17 @@
         const phonenumber = document.getElementById('phonenumber').value;
         const amount = parseInt(document.getElementById('amount').value, 10);
         
-        const requestBody = {
-            name: name,
-            phonenumber: phonenumber,
-            amount: amount
-        };
+        // Use URLSearchParams to create a "simple" request that avoids the CORS preflight
+        const params = new URLSearchParams();
+        params.append('name', name);
+        params.append('phonenumber', phonenumber);
+        params.append('amount', amount);
 
         try {
             const res = await fetch(API_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestBody)
+                // No headers needed for simple requests, the browser handles it.
+                body: params
             });
             
             const data = await res.json();
