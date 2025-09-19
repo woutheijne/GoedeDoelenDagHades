@@ -3,9 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Google Sheets API POST</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #response {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: "Courier New", Courier, monospace;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    Some text
+
+<div class="container">
+    <h2>Add Row to Google Sheet</h2>
+    <form id="addRowForm">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="phonenumber">Phone Number:</label>
+            <input type="text" id="phonenumber" name="phonenumber" required>
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required>
+        </div>
+        <button type="submit">Add Rows</button>
+    </form>
+    
+    <div id="response">Waiting for a response...</div>
+</div>
+
+<script>
+    const form = document.getElementById('addRowForm');
+    const responseDiv = document.getElementById('response');
+    
+    // IMPORTANT: Replace this URL with your deployed Apps Script web app URL
+    const API_URL = 'YOUR_WEB_APP_URL';
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevent the form from submitting normally
+
+        responseDiv.textContent = 'Sending data...';
+        
+        const name = document.getElementById('name').value;
+        const phonenumber = document.getElementById('phonenumber').value;
+        const amount = parseInt(document.getElementById('amount').value, 10);
+        
+        const requestBody = {
+            name: name,
+            phonenumber: phonenumber,
+            amount: amount
+        };
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+            
+            const data = await res.json();
+            
+            if (res.ok) {
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            } else {
+                responseDiv.textContent = `Error: ${data.message || 'Unknown error'}`;
+            }
+
+        } catch (error) {
+            responseDiv.textContent = `Fetch error: ${error.message}`;
+        }
+    });
+</script>
+
 </body>
 </html>
