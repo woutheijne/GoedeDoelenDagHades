@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goede doelen dag Hades</title>
+    <link rel="icon" type="image/x-icon" href="/hades.jpg">
     <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: fit-content;
             background-color: #f0f0f0;
             margin: 0;
             flex-direction: column;
@@ -22,6 +23,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 90%;
             max-width: 400px;
+            min-height: 100vh;
         }
         h2 {
             text-align: center;
@@ -100,11 +102,42 @@
         .loten {
             width: 400px;
         }
+        #password-btn {
+            background-color: white;
+            width: fit-content;
+            padding: 10px;
+        }
+        .popup-container {
+            display: none;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5); 
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <button id="password-btn"><img src="key.svg" alt=""></button>
+    <div style="width: 0; height: 0; top: 0; left: 0; position: absolute;">
+        <div class="popup-container" id="popup-container">
+            <div class="popup-content">
+                <input type="text" name="api-key-input" id="api-key-input" placeholder="Wachtwoord...">
+                <button class="submit" id="password-btn-close">Indienen</button>
+            </div>
+        </div>
+    </div>
     <h2>Loten Kopen</h2>
     <form id="addRowForm">
         <div class="form-group">
@@ -117,10 +150,10 @@
         </div>
         <div class="form-group">
             <label for="amount">Hoeveelheid:</label>
-            <input type="number" id="amount" name="amount" required>
+            <input type="number" id="amount" name="amount" min="1" required>
         </div>
-        <button class="submit" type="submit">Koop loten</button>
-        <button class="reset" type="reset">Wissen</button>
+        <button class="submit" type="submit" id="submit-btn">Koop loten</button>
+        <button class="reset" type="reset" id="reset-btn">Wissen</button>
     </form>
     
     
@@ -132,12 +165,31 @@
     const form = document.getElementById('addRowForm');
     const responseDiv = document.getElementById('response');
     const lotenDiv = document.getElementById('loten')
-    
+    const openPopupBtn = document.getElementById('password-btn')
+    const popupContainer = document.getElementById('popup-container')
+    const closePopupBtn = document.getElementById('password-btn-close')
+    const pwEntry = document.getElementById('api-key-input')
+    const submintBtn = document.getElementById('submit-btn')
+    const resetBtn = document.getElementById('reset-btn')
+    let apiKey = ""
+
+    const cookies = document.cookie.split(';')
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i]
+        while(cookie.charAt(0) === '') cookie = cookie.substring(1, cookie.length)
+        if (cookie.indexOf("api-key=") === 0) apiKey = cookie.substring(8, cookie.length)
+    }
+        
     // IMPORTANT: Replace this URL with your deployed Apps Script web app URL
     const API_URL = 'https://script.google.com/macros/s/AKfycbwMnZ97NDRsO5u7APOxKyT90pgVpiYDgwbLzRlZJLBPpfcgK-ornrgVP4vLEIWH0F_2DA/exec';
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault(); // Prevent the form from submitting normally
+        submintBtn.disabled = true;
+        submintBtn.style.backgroundColor = "#666666"
+        resetBtn.style.disabled = true
+        resetBtn.style.backgroundColor = "#666666"
+
 
         responseDiv.textContent = 'Wachten op loten...';
         
@@ -150,6 +202,7 @@
         params.append('name', name);
         params.append('phonenumber', phonenumber);
         params.append('amount', amount);
+        params.append('api_key', apiKey);
 
         try {
             const res = await fetch(API_URL, {
@@ -160,9 +213,9 @@
             
             const data = await res.json();
             
-            if (res.ok) {
+            if (res.ok && data.status != "error") {
                 responseDiv.textContent = "Uw loten:"
-                console.log(data.row_numbers)
+                console.log(data.message)
                 data.row_numbers.forEach(n => {
                     const div = document.createElement('div');
                     let shortName = name;
@@ -174,7 +227,9 @@
                     lotenDiv.append(div)
                 });
             } else {
-                responseDiv.textContent = `Error: ${data.message || 'Unknown error'}`;
+                responseDiv.textContent = `${data.message || 'Unknown error'}`;
+                submintBtn.disabled = false;
+                submintBtn.style.backgroundColor = "#4CAF50"
             }
 
         } catch (error) {
@@ -186,7 +241,23 @@
         form.reset()
         lotenDiv.innerHTML = ''
         responseDiv.textContent = ''
+        submintBtn.disabled = false;
+        submintBtn.style.backgroundColor = "#4CAF50"
     })
+
+    function showPopup() {
+        popupContainer.style.display = 'flex'
+    }
+    function hidePopup() {
+        apiKey = pwEntry.value
+        const tmrw = new Date()
+        tmrw.setTime(tmrw.getTime() + 86400000)
+        document.cookie = `api-key=${apiKey}; expires=${tmrw.toUTCString()}; path=/`;
+        popupContainer.style.display = "none"
+    }
+
+    openPopupBtn.addEventListener('click', showPopup)
+    closePopupBtn.addEventListener('click', hidePopup)
 </script>
 
 </body>
