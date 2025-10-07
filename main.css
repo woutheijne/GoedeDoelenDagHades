@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    background-color: #f0f0f0;
+    margin: 0;
+    flex-direction: column;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    min-height: 100vh;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.submit {
+    background-color: #4CAF50;
+}
+
+.submit:hover {
+    background-color: #45a049;
+}
+
+.reset {
+    background-color: rgb(255, 60, 60);
+}
+
+.reset:hover {
+    background-color: #db1414;
+}
+
+#response {
+    margin-top: 20px;
+    white-space: pre-wrap;
+    font-family: "Courier New", Courier, monospace;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+    color: #333;
+}
+
+.lot {
+    display: inline-block;
+    background-color: #6b9cff;
+    text-align: center;
+    width: 130px;
+    height: 100px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.name {
+    background-color: white;
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: 7px;
+    font-size: small;
+}
+
+.number {
+    font-size: xx-large;
+    margin: 10px 10px;
+    background-color: white;
+    font-weight: bold;
+    padding: 3px;
+}
+
+.loten {
+    width: 400px;
+}
+
+#password-btn {
+    background-color: white;
+    width: fit-content;
+    padding: 10px;
+}
+
+.popup-container {
+    display: none;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    position: relative;
+}
+
+#suggestionText {
+    color: black;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    margin-bottom: 15px;
+}
+
+#suggestionBubble {
+    height: 0;
+    z-index: 100;
+    position: relative;
+    top: -20px;
+}

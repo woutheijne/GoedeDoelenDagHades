@@ -1,291 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goede doelen dag Hades</title>
     <link rel="icon" type="image/x-icon" href="/hades.jpg">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: fit-content;
-            background-color: #f0f0f0;
-            margin: 0;
-            flex-direction: column;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 400px;
-            min-height: 100vh;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-        }
-        .submit {
-            background-color: #4CAF50;
-        }
-        .submit:hover {
-            background-color: #45a049;
-        }
-        .reset {
-            background-color: rgb(255, 60, 60);
-        }
-        .reset:hover {
-            background-color: #db1414;
-        }
-        #response {
-            margin-top: 20px;
-            white-space: pre-wrap;
-            font-family: "Courier New", Courier, monospace;
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #eee;
-            color: #333;
-        }
-        .lot {    
-            display: inline-block;
-            background-color: #6b9cff;
-            text-align: center;
-            width: 130px;
-            height: 100px;
-            padding: 10px;
-            margin: 10px;
-        }
-        .name {
-            background-color: white;
-            border-radius: 10px;
-            padding: 5px;
-            margin-top: 7px;
-            font-size: small;
-        }
-        .number {
-            font-size: xx-large;
-            margin: 10px 10px;
-            background-color: white;
-            font-weight: bold;
-            padding: 3px;
-        }
-        .loten {
-            width: 400px;
-        }
-        #password-btn {
-            background-color: white;
-            width: fit-content;
-            padding: 10px;
-        }
-        .popup-container {
-            display: none;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.5); 
-            justify-content: center;
-            align-items: center;
-        }
-        .popup-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            text-align: center;
-            position: relative;
-        }
-    </style>
+    <link rel="stylesheet" href="main.css">
 </head>
+
 <body>
-
-<div class="container">
-    <button id="password-btn"><img src="key.svg" alt=""></button>
-    <div style="width: 0; height: 0; top: 0; left: 0; position: absolute;">
-        <div class="popup-container" id="popup-container">
-            <div class="popup-content">
-                <input type="text" name="api-key-input" id="api-key-input" placeholder="Wachtwoord...">
-                <button class="submit" id="password-btn-close">Indienen</button>
+    <div class="container">
+        <button id="password-btn" onclick="showKeyPopup()"><img src="key.svg" alt=""></button>
+        <h2>Loten Registreren</h2>
+        <form id="addRowForm">
+            <div class="form-group">
+                <label for="name">Naam:</label>
+                <input type="text" id="name" name="name" required autocomplete="off">
             </div>
-        </div>
+            <div class="form-group">
+                <label for="address">Straat en huisnummer:</label>
+                <input type="text" id="address" name="address" required autocomplete="off" onfocus="showSuggestion()"
+                    onblur="handleBlur()" pattern="(?=.*\d).*">
+            </div>
+            <div id="suggestionBubble">
+                <button type="button" onclick="acceptSuggestion()" id="suggestionText"
+                    onmousedown="ignoreNextBlur = true;">Laatst gebruikt: </button>
+            </div>
+            <div class="form-group">
+                <label for="amount">Hoeveelheid:</label>
+                <input type="number" id="amount" name="amount" min="1" required autocomplete="off">
+            </div>
+            <button class="submit" type="submit" id="submit-btn">Registreren</button>
+            <button class="reset" type="reset" id="reset-btn">Wissen</button>
+        </form>
+
+
+        <div id="response"></div>
+        <div id="loten" class="loten"></div>
     </div>
-    <h2>Loten Kopen</h2>
-    <form id="addRowForm">
-        <div class="form-group">
-            <label for="name">Naam:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-            <label for="phonenumber">Adres:</label>
-            <input type="text" id="phonenumber" name="phonenumber" required>
-        </div>
-        <div class="form-group">
-            <label for="amount">Hoeveelheid:</label>
-            <input type="number" id="amount" name="amount" min="1" required>
-        </div>
-        <button class="submit" type="submit" id="submit-btn">Koop loten</button>
-        <button class="reset" type="reset" id="reset-btn">Wissen</button>
-    </form>
-    
-    
-    <div id="response"></div>
-    <div id="loten" class="loten"></div>
-</div>
 
-<script src="geo.js"></script>
+    <script src="apiKey.js"></script>
+    <script src="api.js"></script>
+    <script src="addressSuggestion.js"></script>
 
-<script>
-    const form = document.getElementById('addRowForm');
-    const responseDiv = document.getElementById('response');
-    const lotenDiv = document.getElementById('loten')
-    const openPopupBtn = document.getElementById('password-btn')
-    const popupContainer = document.getElementById('popup-container')
-    const closePopupBtn = document.getElementById('password-btn-close')
-    const pwEntry = document.getElementById('api-key-input')
-    const submintBtn = document.getElementById('submit-btn')
-    const resetBtn = document.getElementById('reset-btn')
-    let apiKey = ""
+    <script>
+        const form = document.getElementById('addRowForm');
+        const responseDiv = document.getElementById('response');
+        const lotenDiv = document.getElementById('loten')
+        const openPopupBtn = document.getElementById('password-btn')
+        const submintBtn = document.getElementById('submit-btn')
+        const resetBtn = document.getElementById('reset-btn')
 
-    // Get the api key from its cookie
-    const cookies = document.cookie.split(';')
-    for (let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i].split("=")
-        if (cookie.length == 2) {
-            if (cookie[0] == "api-key") {
-                apiKey = cookie[1];
-                break;
+        // Set custom hints for when the form is not valid
+        form.addEventListener('invalid', function (event) {
+            const input = event.target;
+
+            input.setCustomValidity('');
+
+            if (!input.validity.valid) {
+
+                if (input.validity.valueMissing) {
+                    input.setCustomValidity('Dit veld is verplicht.');
+                }
+
+                else if (input.id === 'address' && input.validity.patternMismatch) {
+                    input.setCustomValidity('Het huisnummer mist.');
+                }
             }
-        }
-    }
-    console.log(`api cookie: '${apiKey}'`)
+        }, true);
 
-    // IMPORTANT: The google apps script URL
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwMnZ97NDRsO5u7APOxKyT90pgVpiYDgwbLzRlZJLBPpfcgK-ornrgVP4vLEIWH0F_2DA/exec';
+        // Remove hint when the input is changed
+        form.addEventListener('input', function (event) {
+            event.target.setCustomValidity('');
+        });
 
-    getStreetName()
+        // Submit form when button is clicked
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setResetDisabled(true)
+            setSubmitDisabled(true)
+            saveSuggestion()
 
-    // Add event listener to the submit byutton in the form
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent the form from submitting normally
-        setResetDisabled(true)
-        setSubmitDisabled(true)
+            responseDiv.textContent = 'Wachten op loten...';
 
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const amount = parseInt(document.getElementById('amount').value, 10);
 
-        responseDiv.textContent = 'Wachten op loten...';
-        
-        const name = document.getElementById('name').value;
-        const phonenumber = document.getElementById('phonenumber').value;
-        const amount = parseInt(document.getElementById('amount').value, 10);
-        
-        // Use URLSearchParams to create a "simple" request that avoids the CORS preflight
-        const params = new URLSearchParams();
-        params.append('name', name);
-        params.append('phonenumber', phonenumber);
-        params.append('amount', amount);
-        params.append('api_key', apiKey);
+            const data = await postData(name, address, amount);
+            console.log(data)
 
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                // No headers needed for simple requests, the browser handles it.
-                body: params
-            });
-            
-            const data = await res.json();
-            
-            if (res.ok && data.status != "error") {
+            if (typeof data !== 'string') {
                 responseDiv.textContent = "Uw loten:"
-                console.log(data.message)
-                data.row_numbers.forEach(n => {
-                    const div = document.createElement('div');
-                    let shortName = name;
-                    if (shortName.length > 20) {
-                        return shortName.slice(0, 17) + '...';
-                    }
-                    div.innerHTML='<p class="name">'+ shortName +'</p><p class="number">' + String(n).padStart(4, '0') + '</p>'
-                    div.classList.add('lot')
-                    lotenDiv.append(div)
+                let shortName = name;
+                if (shortName.length > 20) {
+                    shortName = shortName.slice(0, 17) + '...';
+                }
+                data.forEach(n => {
+                    createLotDiv(n, shortName)
                 });
                 setResetDisabled(false)
             } else {
-                responseDiv.textContent = `${data.message || 'Unknown error'}`;
+                responseDiv.textContent = `${data || 'Unknown error'}`;
                 setSubmitDisabled(false)
                 setResetDisabled(false)
             }
+        });
 
-        } catch (error) {
-            responseDiv.textContent = `Fetch error: ${error.message}`;
+        // reset page when button is clicked
+        form.addEventListener('reset', e => {
+            form.reset()
+            lotenDiv.innerHTML = ''
+            responseDiv.textContent = ''
+            setSubmitDisabled(false)
+        })
+
+        /**
+         * Add a div for a lot
+         */
+        function createLotDiv(number, shortName) {
+            const div = document.createElement('div');
+            div.innerHTML = '<p class="name">' + shortName + '</p><p class="number">' + String(number).padStart(4, '0') + '</p>'
+            div.classList.add('lot')
+            lotenDiv.append(div)
         }
-    });
 
-    form.addEventListener('reset', e => {
-        form.reset()
-        lotenDiv.innerHTML = ''
-        responseDiv.textContent = ''
-        setSubmitDisabled(false)
-    })
-
-    function showPopup() {
-        popupContainer.style.display = 'flex'
-    }
-    function hidePopup() {
-        apiKey = pwEntry.value
-        const tmrw = new Date()
-        tmrw.setTime(tmrw.getTime() + 86400000)
-        document.cookie = `api-key=${apiKey}; expires=${tmrw.toUTCString()}; path=/`;
-        popupContainer.style.display = "none"
-    }
-    function setSubmitDisabled(disabled) {
-        if (disabled) {
-            submintBtn.disabled = true;
-            submintBtn.style.backgroundColor = "#666666"
-        } else {
-            submintBtn.disabled = false;
-            submintBtn.style.backgroundColor = "#4CAF50"
+        /**
+         * Disable or enable the submit button
+         */
+        function setSubmitDisabled(disabled) {
+            if (disabled) {
+                submintBtn.disabled = true;
+                submintBtn.style.backgroundColor = "#666666"
+            } else {
+                submintBtn.disabled = false;
+                submintBtn.style.backgroundColor = "#4CAF50"
+            }
         }
-    }
-    function setResetDisabled(disabled) {
-        if (disabled) {
-            resetBtn.disabled = true;
-            resetBtn.style.backgroundColor = "#666666"
-        } else {
-            resetBtn.disabled = false;
-            resetBtn.style.backgroundColor = "#FF3C3C"
+        /**
+         * Disable or enable the reset button
+         */
+        function setResetDisabled(disabled) {
+            if (disabled) {
+                resetBtn.disabled = true;
+                resetBtn.style.backgroundColor = "#666666"
+            } else {
+                resetBtn.disabled = false;
+                resetBtn.style.backgroundColor = "#FF3C3C"
+            }
         }
-    }
-
-    openPopupBtn.addEventListener('click', showPopup)
-    closePopupBtn.addEventListener('click', hidePopup)
-</script>
+    </script>
 
 </body>
+
 </html>
