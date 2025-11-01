@@ -70,6 +70,7 @@ button {
 }
 
 #response {
+    display: none;
     margin-top: 20px;
     white-space: pre-wrap;
     font-family: "Courier New", Courier, monospace;

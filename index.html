@@ -83,6 +83,7 @@
             saveSuggestion()
 
             responseDiv.textContent = 'Wachten op loten...';
+            responseDiv.style.display="block"
 
             const name = document.getElementById('name').value;
             const address = document.getElementById('address').value;
@@ -114,6 +115,7 @@
             lotenDiv.innerHTML = ''
             responseDiv.textContent = ''
             setSubmitDisabled(false)
+            responseDiv.style.display="none"
         })
 
         /**
