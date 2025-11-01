@@ -11,8 +11,11 @@
 
 <body>
     <div class="container">
-        <button id="password-btn" onclick="showKeyPopup()"><img src="images/key.svg" alt=""></button>
-        <h2>Loten Registreren</h2>
+        <div class="header">
+            <button id="password-btn" onclick="showKeyPopup()"><img src="images/key.svg" alt=""></button>
+            <h2>Loten Registreren</h2>
+            <button id="history-btn" onclick="showHistory()"><img src="images/history.png" alt=""></button>
+        </div>
         <form id="addRowForm">
             <div class="form-group">
                 <label for="name">Naam:</label>
@@ -34,7 +37,16 @@
             <button class="submit" type="submit" id="submit-btn">Registreren</button>
             <button class="reset" type="reset" id="reset-btn">Wissen</button>
         </form>
-
+        <div class="no-size">
+            <div id="history-container" class="popup-container">
+                <div id="history">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <p></p><p>Geschiedenis</p> <div id="close" onclick="closeHistory()"><p>X</p></div>
+                    </div>
+                    <div id="history-items"></div>
+                </div>
+            </div>
+        </div>
 
         <div id="response"></div>
         <div id="loten" class="loten"></div>
@@ -43,6 +55,7 @@
     <script src="js/apiKey.js"></script>
     <script src="js/api.js"></script>
     <script src="js/addressSuggestion.js"></script>
+    <script src="js/history.js"></script>
 
     <script>
         const form = document.getElementById('addRowForm');
@@ -95,15 +108,20 @@
             if (typeof data !== 'string') {
                 responseDiv.textContent = "Uw loten:"
                 let shortName = name;
-                if (shortName.length > 20) {
-                    shortName = shortName.slice(0, 17) + '...';
+                if (shortName.length > 17) {
+                    shortName = shortName.slice(0, 15) + '...';
                 }
                 data.forEach(n => {
                     createLotDiv(n, shortName)
                 });
+                addHistory(shortName, data)
                 setResetDisabled(false)
             } else {
-                responseDiv.textContent = `${data || 'Unknown error'}`;
+                if (data == "Failed to fetch") {
+                    responseDiv.textContent = "Kan niet verbinden."
+                } else {
+                    responseDiv.textContent = `${data || 'Unknown error'}`;
+                }
                 setSubmitDisabled(false)
                 setResetDisabled(false)
             }

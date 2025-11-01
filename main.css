@@ -22,6 +22,7 @@ body {
 h2 {
     text-align: center;
     color: #333;
+    width: fit-content;
 }
 
 .form-group {
@@ -88,7 +89,7 @@ button {
     width: 130px;
     height: 100px;
     padding: 10px;
-    margin: 10px;
+    margin: 10px 25px;
 }
 
 .name {
@@ -117,8 +118,52 @@ button {
     padding: 10px;
 }
 
+#history-btn {
+    background-color: white;
+    width: fit-content;
+    padding: 10px;
+}
+#history-btn img {
+    width: 30px;
+}
+.no-size {
+    width: 0;
+    height: 0;
+}
+#history {
+    display: block;
+    padding: 10px;
+    background-color: white;
+    width: min(400px, 100vw);
+    border-radius: 20px;
+}
+#history-items {
+    grid-template-columns: 50px 100px 1fr;
+    display: grid;
+}
+#close p {
+    border-radius: 15px;
+    background-color: #c6c6c6;
+    width: fit-content;
+    height: fit-content;
+    padding: 5px 8px;
+    text-align: center;
+    margin: 0;
+}
+#close {
+    text-align: right;
+    cursor: pointer;
+    justify-content: end;
+    display: flex;    
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
 .popup-container {
     display: none;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;

@@ -12,10 +12,10 @@ function getAPIKey() {
 }
 
 /**
- * Show the passwork popup
+ * Show the password popup
  */
 function showKeyPopup() {
-    const inp = window.prompt("API wachtwoord")
+    const inp = window.prompt("Vul API wachtwoord in")
     if (inp && inp != "") {
         apiKey = inp
         const tmrw = new Date()
