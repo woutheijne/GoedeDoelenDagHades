@@ -30,7 +30,7 @@ function showKeyPopup() {
 function checkCookies() {
     const cookies = document.cookie.split(';')
     for (let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i].split("=")
+        let cookie = cookies[i].trim().split("=")
         if (cookie.length == 2) {
             if (cookie[0] == "api-key") {
                 return cookie[1];
