@@ -5,9 +5,9 @@ function setCookie(hist) {
 	for (i in hist) {
 		str += `${i}+${hist[i].time}+${hist[i].name}+${hist[i].loten.join(",")}!`
 	}
-	const tmrw = new Date()
-	tmrw.setTime(tmrw.getTime() + 86400000)
-	document.cookie = `history=${str}; expires=${tmrw.toUTCString()}; path=/`;
+	const now = new Date()
+	now.setHours(23, 59, 59, 999)
+	document.cookie = `history=${str}; expires=${now.toUTCString()}; path=/`;
 }
 
 function checkHistoryCookie() {
@@ -23,7 +23,7 @@ function checkHistoryCookie() {
 			}
 		}
 		if (cookie == null) {
-			console.log("history cookie not detected")
+			// console.log("history cookie not detected")
 			return []
 		}
 		hl = []
