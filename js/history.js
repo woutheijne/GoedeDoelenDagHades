@@ -24,7 +24,7 @@ function checkHistoryCookie() {
 		}
 		if (cookie == null) {
 			console.log("history cookie not detected")
-			return null
+			return []
 		}
 		hl = []
 		cookie.split('!').forEach(h => {
@@ -39,6 +39,7 @@ function checkHistoryCookie() {
 	} catch (e) {
 		console.log("Failed to parse cookie")
 		console.log(e)
+		return []
 	}
 }
 
